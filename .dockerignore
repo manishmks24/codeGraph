@@ -1,0 +1,11 @@
+.git
+.github
+.gemini
+.agents
+**/node_modules
+**/dist
+**/target
+**/.system_generated
+**/*.log
+**/*.tmp
+backend/tools/apache-maven-3.9.9

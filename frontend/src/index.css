@@ -1,0 +1,124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Custom Minimal Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.45);
+}
+
+/* React Flow Theming - Dark */
+.dark .react-flow__background {
+  background-color: #090d16 !important;
+}
+
+.dark .react-flow__controls {
+  background-color: #0f172a !important;
+  border: 1px solid #1e293b !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark .react-flow__controls-button {
+  background-color: transparent !important;
+  border-bottom: 1px solid #1e293b !important;
+  color: #94a3b8 !important;
+  fill: #94a3b8 !important;
+}
+
+.dark .react-flow__controls-button:hover {
+  background-color: #1e293b !important;
+  color: #f8fafc !important;
+  fill: #f8fafc !important;
+}
+
+.dark .react-flow__minimap {
+  background-color: #0f172a !important;
+  border: 1px solid #1e293b !important;
+  border-radius: 12px !important;
+}
+
+/* React Flow Theming - Light */
+html:not(.dark) .react-flow__background {
+  background-color: #f8fafc !important;
+}
+
+html:not(.dark) .react-flow__controls {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08) !important;
+}
+
+html:not(.dark) .react-flow__controls-button {
+  background-color: transparent !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  color: #64748b !important;
+  fill: #64748b !important;
+}
+
+html:not(.dark) .react-flow__controls-button:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  fill: #0f172a !important;
+}
+
+html:not(.dark) .react-flow__minimap {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Pulse Keyframes for Blast Radius */
+@keyframes blast-pulse-red {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    border-color: #ef4444;
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    border-color: #f87171;
+  }
+}
+
+@keyframes blast-pulse-target {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.8);
+    border-color: #eab308;
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(234, 179, 8, 0);
+    border-color: #fde047;
+  }
+}
+
+.node-blast-impacted {
+  animation: blast-pulse-red 2s infinite ease-in-out;
+}
+
+.node-blast-target {
+  animation: blast-pulse-target 2s infinite ease-in-out;
+}
