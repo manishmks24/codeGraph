@@ -11,7 +11,30 @@ import {
 } from '../types';
 import { getStoredGeminiKey, getStoredGeminiModel } from './geminiStorage';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+function getApiBaseUrl(): string {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (!envUrl || !envUrl.trim()) {
+    return '/api';
+  }
+  let url = envUrl.trim();
+  // If it's a relative path like '/api', return it without trailing slashes
+  if (url.startsWith('/')) {
+    return url.replace(/\/+$/, '') || '/api';
+  }
+  // If missing http:// or https:// protocol, prepend https://
+  if (!/^https?:\/\//i.test(url)) {
+    url = `https://${url}`;
+  }
+  // Strip trailing slashes
+  url = url.replace(/\/+$/, '');
+  // Ensure the /api suffix is present for backend routing
+  if (!url.endsWith('/api')) {
+    url = `${url}/api`;
+  }
+  return url;
+}
+
+const API_BASE = getApiBaseUrl();
 
 const getHeaders = (extra: Record<string, string> = {}): Record<string, string> => {
   const headers: Record<string, string> = { ...extra };
