@@ -97,5 +97,10 @@ docker compose up --build -d
 
 ---
 
-## 📄 License
-MIT License. Built with ❤️ for software architects and developers.
+## 📄 License & Author
+
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+
+**Author**: **Manish Kumar Sahu**  
+Built with ❤️ for software architects and developers.
+

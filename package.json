@@ -1,6 +1,8 @@
 {
   "name": "codegraph-ai",
   "version": "1.0.0",
+  "author": "Manish Kumar Sahu",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "build": "npm run build --prefix frontend",
