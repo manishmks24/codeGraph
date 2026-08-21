@@ -95,6 +95,15 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="text-[9px] uppercase font-mono tracking-wider px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 font-semibold hidden md:inline-block">
                 AST Graph
               </span>
+              <a
+                href="https://github.com/manishmks24"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[10px] text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 font-mono transition-colors hidden lg:inline-block"
+                title="Developed by Manish Kumar Sahu"
+              >
+                by Manish
+              </a>
             </div>
           </div>
 
