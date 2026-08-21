@@ -53,12 +53,12 @@ export async function fetchGraph(): Promise<CodeGraph> {
   return res.json();
 }
 
-export async function scanSample(): Promise<CodeGraph> {
-  const res = await fetch(`${API_BASE}/codebase/scan-sample`, {
+export async function scanSample(type: string = 'ecommerce'): Promise<CodeGraph> {
+  const res = await fetch(`${API_BASE}/codebase/scan-sample?type=${encodeURIComponent(type)}`, {
     method: 'POST',
     headers: getHeaders()
   });
-  if (!res.ok) throw new Error('Failed to scan sample codebase');
+  if (!res.ok) throw new Error(`Failed to scan ${type} sample codebase`);
   return res.json();
 }
 

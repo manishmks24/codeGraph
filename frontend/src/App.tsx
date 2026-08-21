@@ -10,6 +10,7 @@ import { ProjectSkillTab } from './components/skill/ProjectSkillTab';
 import { ProjectImportModal } from './components/ingestion/ProjectImportModal';
 import { GeminiKeyModal } from './components/settings/GeminiKeyModal';
 import { UserGuideModal } from './components/guide/UserGuideModal';
+import { ExportDiagramModal } from './components/export/ExportDiagramModal';
 import {
   fetchGraph,
   fetchViolations,
@@ -61,6 +62,7 @@ export const App: React.FC = () => {
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isGeminiModalOpen, setIsGeminiModalOpen] = useState(false);
   const [isGuideModalOpen, setIsGuideModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   // Initial load
   const loadData = async () => {
@@ -149,6 +151,7 @@ export const App: React.FC = () => {
         onOpenImportModal={() => setIsImportModalOpen(true)}
         onOpenGeminiKeyModal={() => setIsGeminiModalOpen(true)}
         onOpenGuide={() => setIsGuideModalOpen(true)}
+        onOpenExportModal={() => setIsExportModalOpen(true)}
       />
 
       {/* Main Workspace Area */}
@@ -163,6 +166,7 @@ export const App: React.FC = () => {
               onClearBlastRadius={() => setBlastRadius(null)}
               onSelectNode={(node) => setSelectedNode(node)}
               onTriggerBlastRadius={handleTriggerBlastRadius}
+              onOpenExportModal={() => setIsExportModalOpen(true)}
             />
           )}
 
@@ -237,6 +241,13 @@ export const App: React.FC = () => {
         onOpenImportModal={() => setIsImportModalOpen(true)}
         onOpenGeminiModal={() => setIsGeminiModalOpen(true)}
         onOpenCopilot={() => setIsCopilotOpen(true)}
+      />
+
+      {/* Export Architecture & Guardrails Modal */}
+      <ExportDiagramModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        graph={graph}
       />
     </div>
   );

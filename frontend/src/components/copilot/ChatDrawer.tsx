@@ -217,7 +217,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({
               ) : (
                 <>
                   <Bot className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                  <span>ArchLens Agent</span>
+                  <span>CodeGraph AI Agent</span>
                 </>
               )}
             </div>

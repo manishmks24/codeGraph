@@ -271,4 +271,192 @@ public class SampleCodebaseProvider {
 
         return files;
     }
+
+    public Map<String, String> getNextJsExpressSampleCodebase() {
+        Map<String, String> files = new LinkedHashMap<>();
+
+        files.put("src/controllers/PaymentController.ts", """
+            import { PaymentService } from '../services/PaymentService';
+            import { StripeClient } from '../services/StripeClient';
+
+            export class PaymentController {
+                constructor(private paymentService: PaymentService) {}
+
+                async checkout(req: any, res: any) {
+                    const session = await this.paymentService.createSession(req.body);
+                    return res.json(session);
+                }
+            }
+            """.stripIndent());
+
+        files.put("src/services/PaymentService.ts", """
+            import { OrderRepository } from '../repositories/OrderRepository';
+            import { StripeClient } from './StripeClient';
+            import { NotificationService } from './NotificationService';
+
+            export class PaymentService {
+                constructor(
+                    private orderRepository: OrderRepository,
+                    private stripeClient: StripeClient,
+                    private notificationService: NotificationService
+                ) {}
+
+                async createSession(data: any) {
+                    const order = await this.orderRepository.findById(data.orderId);
+                    const charge = await this.stripeClient.charge(order);
+                    await this.notificationService.sendReceipt(order);
+                    return charge;
+                }
+            }
+            """.stripIndent());
+
+        files.put("src/services/StripeClient.ts", """
+            export class StripeClient {
+                async charge(order: any) {
+                    return { id: 'ch_123', status: 'SUCCESS' };
+                }
+            }
+            """.stripIndent());
+
+        files.put("src/services/NotificationService.ts", """
+            import { OrderRepository } from '../repositories/OrderRepository';
+
+            export class NotificationService {
+                constructor(private orderRepository: OrderRepository) {}
+
+                async sendReceipt(order: any) {
+                    console.log('Sending receipt for order', order);
+                }
+            }
+            """.stripIndent());
+
+        files.put("src/repositories/OrderRepository.ts", """
+            import { Order } from '../models/Order';
+
+            export class OrderRepository {
+                async findById(id: string): Promise<Order | null> {
+                    return null;
+                }
+
+                async save(order: Order): Promise<Order> {
+                    return order;
+                }
+            }
+            """.stripIndent());
+
+        files.put("src/models/Order.ts", """
+            export class Order {
+                id: string;
+                userId: string;
+                amount: number;
+                status: string;
+                createdAt: Date;
+            }
+            """.stripIndent());
+
+        files.put("src/app/api/checkout/route.ts", """
+            import { PaymentController } from '../../../controllers/PaymentController';
+
+            export async function POST(request: Request) {
+                return Response.json({ status: 'OK' });
+            }
+
+            export async function GET(request: Request) {
+                return Response.json({ activeSessions: [] });
+            }
+            """.stripIndent());
+
+        return files;
+    }
+
+    public Map<String, String> getFastApiAiSampleCodebase() {
+        Map<String, String> files = new LinkedHashMap<>();
+
+        files.put("app/routers/agent_router.py", """
+            from fastapi import APIRouter, Depends
+            from app.services.rag_agent_service import RagAgentService
+            from app.models.query_request import QueryRequest
+
+            router = APIRouter(prefix="/api/v1/agent")
+
+            @router.post("/query")
+            async def query_agent(req: QueryRequest, agent_service: RagAgentService = Depends()):
+                return await agent_service.execute_query(req.prompt, req.user_id)
+
+            @router.get("/status/{task_id}")
+            async def get_task_status(task_id: str):
+                return {"task_id": task_id, "status": "COMPLETED"}
+            """.stripIndent());
+
+        files.put("app/services/rag_agent_service.py", """
+            from app.repositories.vector_store_repository import VectorStoreRepository
+            from app.services.llm_inference_service import LlmInferenceService
+            from app.repositories.user_session_repository import UserSessionRepository
+
+            class RagAgentService:
+                def __init__(self, vector_store: VectorStoreRepository, llm: LlmInferenceService, session_repo: UserSessionRepository):
+                    self.vector_store = vector_store
+                    self.llm = llm
+                    self.session_repo = session_repo
+
+                async def execute_query(self, prompt: str, user_id: str):
+                    context = await self.vector_store.similarity_search(prompt)
+                    response = await self.llm.generate(prompt, context)
+                    await self.session_repo.record_interaction(user_id, prompt, response)
+                    return response
+            """.stripIndent());
+
+        files.put("app/services/llm_inference_service.py", """
+            class LlmInferenceService:
+                async def generate(self, prompt: str, context: list):
+                    return {"answer": "Synthesized AI response"}
+            """.stripIndent());
+
+        files.put("app/repositories/vector_store_repository.py", """
+            class VectorStoreRepository:
+                async def similarity_search(self, query: str):
+                    return ["Relevant chunk A", "Relevant chunk B"]
+            """.stripIndent());
+
+        files.put("app/repositories/user_session_repository.py", """
+            from app.models.user_session import UserSession
+
+            class UserSessionRepository:
+                async def record_interaction(self, user_id: str, prompt: str, response: dict):
+                    pass
+            """.stripIndent());
+
+        files.put("app/models/user_session.py", """
+            class UserSession:
+                id: str
+                user_id: str
+                interaction_count: int
+            """.stripIndent());
+
+        files.put("app/models/query_request.py", """
+            class QueryRequest:
+                prompt: str
+                user_id: str
+            """.stripIndent());
+
+        return files;
+    }
+
+    public Map<String, String> getSampleCodebase(String type) {
+        if (type == null) return getECommerceSampleCodebase();
+        return switch (type.toLowerCase().trim()) {
+            case "nextjs", "typescript", "react" -> getNextJsExpressSampleCodebase();
+            case "fastapi", "python", "ai" -> getFastApiAiSampleCodebase();
+            default -> getECommerceSampleCodebase();
+        };
+    }
+
+    public String getSampleProjectName(String type) {
+        if (type == null) return "E-Commerce Order & Payment Microservice";
+        return switch (type.toLowerCase().trim()) {
+            case "nextjs", "typescript", "react" -> "Next.js & Express Fullstack API";
+            case "fastapi", "python", "ai" -> "FastAPI Generative AI Agent Service";
+            default -> "E-Commerce Order & Payment Microservice";
+        };
+    }
 }

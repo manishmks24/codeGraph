@@ -90,10 +90,10 @@ public class CodebaseController {
     }
 
     @PostMapping("/scan-sample")
-    public ResponseEntity<CodeGraph> scanSampleCodebase() {
-        Map<String, String> sampleFiles = sampleProvider.getECommerceSampleCodebase();
+    public ResponseEntity<CodeGraph> scanSampleCodebase(@RequestParam(value = "type", defaultValue = "ecommerce") String type) {
+        Map<String, String> sampleFiles = sampleProvider.getSampleCodebase(type);
         CodeGraph graph = scannerService.scanFiles(sampleFiles);
-        graph.setProjectName("E-Commerce Order & Payment Microservice");
+        graph.setProjectName(sampleProvider.getSampleProjectName(type));
         graphStore.saveGraph(graph);
         return ResponseEntity.ok(graph);
     }
@@ -109,7 +109,7 @@ public class CodebaseController {
     public ResponseEntity<CodeGraph> getActiveGraph() {
         CodeGraph graph = graphStore.getActiveGraph();
         if (graph == null) {
-            return scanSampleCodebase();
+            return scanSampleCodebase("ecommerce");
         }
         return ResponseEntity.ok(graph);
     }

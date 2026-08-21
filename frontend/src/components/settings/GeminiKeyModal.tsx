@@ -18,14 +18,19 @@ export const GeminiKeyModal: React.FC<GeminiKeyModalProps> = ({ isOpen, onClose,
   const [showKey, setShowKey] = useState(false);
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
     if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
       const existing = getStoredGeminiKey();
       setApiKey(existing);
       setModel(getStoredGeminiModel());
       setValidationStatus(existing ? 'valid' : 'idle');
       setErrorMessage(null);
     }
-  }, [isOpen]);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -86,8 +91,14 @@ export const GeminiKeyModal: React.FC<GeminiKeyModalProps> = ({ isOpen, onClose,
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col text-slate-900 dark:text-slate-100 transition-colors duration-200">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200 text-slate-900 dark:text-slate-100"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col text-slate-900 dark:text-slate-100 transition-colors duration-200"
+      >
         {/* Header */}
         <div className="p-5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/50 dark:bg-slate-950/50">
           <div className="flex items-center gap-2.5">

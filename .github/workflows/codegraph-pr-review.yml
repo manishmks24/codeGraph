@@ -1,0 +1,37 @@
+name: "CodeGraph AI — PR Blast Radius Review"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  blast-radius-check:
+    name: "Architectural Blast Radius Audit"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run CodeGraph Blast Radius Analysis
+        id: codegraph
+        run: |
+          node scripts/pr-blast-radius.mjs
+
+      - name: Post PR Blast Radius Comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-path: blast-radius-report.md
+          edit-mode: replace

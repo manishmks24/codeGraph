@@ -1,0 +1,20 @@
+name: 'CodeGraph AI Blast Radius Reviewer'
+description: 'Automated architectural blast radius analyzer and PR comment reviewer for multi-service codebases'
+author: 'Manish Kumar Sahu'
+branding:
+  icon: 'git-pull-request'
+  color: 'green'
+
+inputs:
+  github-token:
+    description: 'GitHub token for posting PR comments'
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run Blast Radius Analysis
+      shell: bash
+      run: |
+        node ${{ github.action_path }}/scripts/pr-blast-radius.mjs
